@@ -1,5 +1,7 @@
 'use strict';
 
+var models = require('../models');
+
 var users = {};
 
 users.show = function(req, res, next) {
@@ -7,7 +9,13 @@ users.show = function(req, res, next) {
 };
 
 users.edit = function(req, res, next) {
-  res.send('edit');
+  models.User.findAll({
+  }).then(function(users) {
+    res.render('index', {
+      title: 'Express',
+      users: users
+    });
+  });
 };
 
 module.exports = users;
