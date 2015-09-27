@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+require('babel/register');
 var app = require('../app');
 var debug = require('debug')('break-shot-web:server');
 var http = require('http');

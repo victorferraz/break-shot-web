@@ -3,23 +3,20 @@
 var models = require('../models');
 var async = require('async');
 
-var users = {};
+var posts = {};
 
-users.show = function(req, res, next) {
-  res.send('respond with a resource');
+posts.show  = (req, res, next) => { res.send('respond with a resource'); };
+
+posts.add = function(req, res, next) {
 };
 
-users.add = function(req, res, next) {
+posts.index = function(req, res, next) {
 };
 
-
-users.index = function(req, res, next) {
+posts.delete = function(req, res, next) {
 };
 
-users.delete = function(req, res, next) {
-};
-
-users.edit = function(req, res, next) {
+posts.edit = function(req, res, next) {
   async.auto({
     users: function (cb) {
       models.User.findAll().then(cb);
@@ -35,4 +32,4 @@ users.edit = function(req, res, next) {
   });
 };
 
-module.exports = users;
+module.exports = posts;
