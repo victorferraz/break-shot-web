@@ -1,10 +1,4 @@
-@import "compass/css3";
-
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
+@import "normalize.scss";
+@import "webflow.scss";
+@import "breakshot-v2.webflow.scss";
+@import "custom_webflow.scss";

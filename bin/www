@@ -4,10 +4,10 @@
  * Module dependencies.
  */
 
-require('babel/register');
 var app = require('../app');
 var debug = require('debug')('break-shot-web:server');
 var http = require('http');
+var io = require('socket.io');
 
 /**
  * Get port from environment and store in Express.
@@ -15,6 +15,8 @@ var http = require('http');
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+
+
 
 /**
  * Create HTTP server.
@@ -77,6 +79,25 @@ function onError(error) {
       throw error;
   }
 }
+
+//socket.io
+var socket = io.listen(server);
+
+socket.on('connection', function(socket) {
+  console.log('socket.io connected');
+});
+
+socket.on('data', function(data) {
+  new Order({
+    routeFrom : data.routeFrom,
+    routeTo : data.routeTo,
+    leaving: data.leaving
+  }).save(function(err, docs) {
+    if(err) { return console.log("error"); }
+    socket.emit('callback', {done: 'Done', data: data});
+  });
+});
+
 
 /**
  * Event listener for HTTP server "listening" event.
