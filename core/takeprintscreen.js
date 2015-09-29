@@ -9,7 +9,7 @@ var zip = new JSZip();
 var TakePrintScreen = function(){
 };
 
-TakePrintScreen.prototype.takePics = function (mediaArray, data, callback) {
+TakePrintScreen.prototype.takePics = function (mediaArray, data) {
     this.destiny = data.destiny;
     this.index = 0;
     this.data = data;
@@ -20,7 +20,7 @@ TakePrintScreen.prototype.takePics = function (mediaArray, data, callback) {
     if (data.size === 'auto-sizing'){
         params = merged.concat.apply(merged, mediaArray);
     }
-    async.eachLimit(mediaArray, 1, this.take.bind(this), function(err){
+    return async.eachLimit(mediaArray, 1, this.take.bind(this), function(err){
         console.log(err);
     });
 };
@@ -30,7 +30,7 @@ TakePrintScreen.prototype.onFinished = function(data){
 };
 
 
-TakePrintScreen.prototype.take = function (sizes) {
+TakePrintScreen.prototype.take = function (sizes, callback) {
     var arrayWidth = this.getWidth(sizes);
     var path;
     this.index++;
@@ -41,14 +41,10 @@ TakePrintScreen.prototype.take = function (sizes) {
         .src(path, arrayWidth, {'filename': this.data.fileName + '-<%= size %>', 'format': this.data.extension })
         .dest(dir);
     pgeres.run(function(err, streams){
-        console.log(err);
         if (err) {
             throw err;
         }else{
-            self.onFinished(streams);
-            zip.folder(dir);
-            var content = zip.generate();
-            var actual = JSZip.base64.decode(content);
+            callback(streams);
         }
     });
 };
@@ -56,7 +52,6 @@ TakePrintScreen.prototype.take = function (sizes) {
 TakePrintScreen.prototype.createDir = function () {
     var tmpDir = Date.now();
     var dir = __dirname + '/../tmp/' + tmpDir;
-    console.log(dir);
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
     }

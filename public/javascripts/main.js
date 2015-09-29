@@ -126,7 +126,19 @@ Main.prototype.go = function (e) {
     this.sentData(objForm);
 };
 
+
+ var socket = io.connect('http://localhost:4200');
+ socket.on('connect', function(data) {
+    socket.emit('join', 'Hello World from client');
+ });
+
+ socket.on('broad', function(data) {
+    alert(data);
+ });
+
 Main.prototype.sentData = function (obj) {
+
+    socket.emit('messages', 'message');
     $.ajax({
         method: 'POST',
         url: '/url-break-points',

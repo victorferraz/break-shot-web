@@ -26,10 +26,9 @@ Controller.prototype.go = function (data) {
         }
         return media;
     }).then( function(mediaQueries) {
-        var take = TakePrintScreen.takePics(mediaQueries, settings, function (data) {
-            console.log(data);
+        return TakePrintScreen.takePics(mediaQueries, settings, function (data) {
+           return data;
         });
-        return take;
     });
 
 };
