@@ -9,7 +9,7 @@ var CustomSize = require('./customsize');
 var Q = require('q');
 var Controller = function () {};
 
-Controller.prototype.go = function (data) {
+Controller.prototype.go = function (data, callback) {
     var settings = data;
     var readHtml = ReadHtml.getHtmlArray(data);
     var deferred = Q.defer();
@@ -26,8 +26,8 @@ Controller.prototype.go = function (data) {
         }
         return media;
     }).then( function(mediaQueries) {
-        return TakePrintScreen.takePics(mediaQueries, settings, function (data) {
-           return data;
+        TakePrintScreen.takePics(mediaQueries, settings, function (data) {
+           return callback(data);
         });
     });
 

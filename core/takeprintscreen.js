@@ -5,11 +5,13 @@ var async = require('async');
 var fs = require('fs');
 var JSZip = require('jszip');
 var zip = new JSZip();
+var fs = require('fs');
+var zipFile = require('zip');
 
 var TakePrintScreen = function(){
 };
 
-TakePrintScreen.prototype.takePics = function (mediaArray, data) {
+TakePrintScreen.prototype.takePics = function (mediaArray, data, callback) {
     this.destiny = data.destiny;
     this.index = 0;
     this.data = data;
@@ -20,13 +22,12 @@ TakePrintScreen.prototype.takePics = function (mediaArray, data) {
     if (data.size === 'auto-sizing'){
         params = merged.concat.apply(merged, mediaArray);
     }
-    return async.eachLimit(mediaArray, 1, this.take.bind(this), function(err){
-        console.log(err);
+    return async.eachLimit(mediaArray, 1, this.take.bind(this), function(res){
+        callback(res);
     });
 };
 
 TakePrintScreen.prototype.onFinished = function(data){
-    console.log(data);
 };
 
 

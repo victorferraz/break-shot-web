@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('break-shot-web:server');
 var http = require('http');
+var controller = require('../core/controller');
 
 /**
  * Get port from environment and store in Express.
@@ -22,6 +23,8 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
+
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -32,6 +35,31 @@ server.listen(port, function () {
 });
 server.on('error', onError);
 server.on('listening', onListening);
+
+
+var countdown = 1000;
+setInterval(function() {
+  countdown--;
+  io.sockets.emit('timer', { countdown: countdown });
+}, 1000);
+var sockets = [];
+var messages = [];
+io.sockets.on('connection', function (socket) {
+    socket.on('reset', function (data) {
+        countdown = 1000;
+        io.sockets.emit('timer', { countdown: countdown });
+    });
+
+    sockets.push(socket);
+    socket.emit('messages-available', messages);
+    socket.on('add-message', function (data) {
+        controller.go(data, function(data){
+            io.sockets.emit('message-added', data);
+        });
+    });
+
+});
+
 
 /**
  * Normalize a port into a number, string, or false.

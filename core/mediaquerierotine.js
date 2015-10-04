@@ -112,7 +112,6 @@ MediaQuerieRotine.prototype.getMedia = function (cssFile) {
             this.urlHtml = cssFile.html;
             res = this.findAdBanner(tree.rules);
             if (res !== null && res !== undefined){
-                console.log(res);
                 arrayBanner.push(res);
             }
 
@@ -148,7 +147,6 @@ MediaQuerieRotine.prototype.findKey = function (obj, selector) {
     var properties = null;
     for(var index=0; index < obj.selectors.length; index++){
         if (obj.selectors[index] === selector) {
-            console.log(obj);
             properties = this.findProperties(obj);
         }
     }

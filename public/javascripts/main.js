@@ -3,6 +3,20 @@
 var Validate = require('./validate');
 var $ = require('jquery');
 
+
+
+var socket = io.connect('http://localhost:4000');
+
+socket.on('timer', function (data) {
+});
+
+ socket.emit('data', {'zzz': 'yyy'});
+
+socket.on('callback', function(data) {
+  console.log(data);
+  // Print the data.data somewhere...
+});
+
 var Main = function () {
     this.init();
 
@@ -126,27 +140,12 @@ Main.prototype.go = function (e) {
     this.sentData(objForm);
 };
 
-
- var socket = io.connect('http://localhost:4200');
- socket.on('connect', function(data) {
-    socket.emit('join', 'Hello World from client');
- });
-
- socket.on('broad', function(data) {
-    alert(data);
- });
-
 Main.prototype.sentData = function (obj) {
-
-    socket.emit('messages', 'message');
-    $.ajax({
-        method: 'POST',
-        url: '/url-break-points',
-        data: obj
-    }).done(function(data){
-        console.log(data);
-    });
+    socket.emit('add-message', obj);
 };
+
+socket.on('message-added', function (data) { console.log(data); });
+
 
 Main.prototype.getOrigin = function (objForm) {
     var origin = '';
