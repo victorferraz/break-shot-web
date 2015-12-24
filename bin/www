@@ -19,6 +19,7 @@ server.on('listening', onListening);
 
 var sockets = [];
 var messages = [];
+
 io.sockets.on('connection', function (socket) {
     socket.emit('messages-available', messages);
     socket.on('add-message', function (data) {
