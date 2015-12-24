@@ -11,6 +11,6 @@ function init(server) {
         });
     });
     return io;
-};
+}
 
 module.exports = init;

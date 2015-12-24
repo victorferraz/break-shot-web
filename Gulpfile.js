@@ -3,10 +3,10 @@
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
 
-gulp.task('develop', function () {
+gulp.task('develop', () => {
   nodemon({ script: 'bin/www',
   ext: 'html js' })
-    .on('restart', function () {
+    .on('restart', () => {
         console.log('reloaded');
     });
 });

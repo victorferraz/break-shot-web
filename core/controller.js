@@ -3,10 +3,11 @@
 var GetCss = require('./getcss');
 var MediaQuerieRotine = require('./mediaquerierotine');
 var TakePrintScreen = require('./takeprintscreen');
-var ReadHtml = require('./readHtml');
+var ReadHtml = require('./readhtml');
 var CustomSize = require('./customsize');
-
 var Q = require('q');
+var Zip = require('./zip');
+
 var Controller = function () {};
 
 Controller.prototype.go = function (data, callback) {
@@ -14,7 +15,7 @@ Controller.prototype.go = function (data, callback) {
     var readHtml = ReadHtml.getHtmlArray(data);
     var deferred = Q.defer();
     deferred.resolve(readHtml);
-    return deferred.promise.then( function(readHtml) {
+    deferred.promise.then( function(readHtml) {
         var urlMain = GetCss.run(readHtml, settings);
         return urlMain;
     }).then( function(urlMain) {
@@ -26,11 +27,12 @@ Controller.prototype.go = function (data, callback) {
         }
         return media;
     }).then( function(mediaQueries) {
-        TakePrintScreen.takePics(mediaQueries, settings, function (data) {
-           return callback(data);
-        });
+        return TakePrintScreen.takePics(mediaQueries, settings);
+    }).then( function (res) {
+        return Zip.zipFolder(res);
+    }).then( function (res) {
+        callback(res);
     });
-
 };
 
 module.exports = new Controller();

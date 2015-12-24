@@ -1,20 +1,28 @@
 var fs = require('fs');
 var archiver = require('archiver');
-
-var output = fs.createWriteStream(__dirname + '/example-output.zip');
 var archive = archiver('zip');
+var Q = require('q');
 
-output.on('close', function() {
-  console.log(archive.pointer() + ' total bytes');
-  console.log('archiver has been finalized and the output file descriptor has closed.');
-});
+var Zip = function () {};
 
-archive.on('error', function(err) {
-  throw err;
-});
+Zip.prototype.zipFolder = function (obj, callback) {
+    var response = {};
+    response.obj = obj;
+    var zipName = obj.dir + '.zip';
+    var output = fs.createWriteStream(zipName);
+    response.zipName = zipName;
+    output.on('close', function() {});
+    archive.on('error', function(err) {
+      throw err;
+    });
+    console.log('start zip');
 
-archive.pipe(output);
+    var deferred = Q.defer();
+    archive
+      .directory(obj.dir)
+      .finalize();
+    deferred.resolve(response);
+    return deferred.promise;
+};
 
-archive
-  .directory('teste')
-  .finalize();
+module.exports = new Zip();

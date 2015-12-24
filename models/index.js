@@ -11,11 +11,13 @@ var db        = {};
 
 fs
   .readdirSync(__dirname)
-  .filter(function(file) {
+  .filter(file => {
     return (file.indexOf('.') !== 0) && (file !== basename);
   })
-  .forEach(function(file) {
-    if (file.slice(-3) !== '.js') return;
+  .forEach(file => {
+    if (file.slice(-3) !== '.js') {
+        return;
+    }
     var model = sequelize['import'](path.join(__dirname, file));
     db[model.name] = model;
   });

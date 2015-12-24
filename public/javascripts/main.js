@@ -2,20 +2,7 @@
 
 var Validate = require('./validate');
 var $ = require('jquery');
-
-
-
 var socket = io.connect('http://localhost:4000');
-
-socket.on('timer', function (data) {
-});
-
- socket.emit('data', {'zzz': 'yyy'});
-
-socket.on('callback', function(data) {
-  console.log(data);
-  // Print the data.data somewhere...
-});
 
 var Main = function () {
     this.init();
@@ -144,7 +131,6 @@ Main.prototype.sentData = function (obj) {
     socket.emit('add-message', obj);
 };
 
-socket.on('message-added', function (data) { console.log(data); });
 
 
 Main.prototype.getOrigin = function (objForm) {
@@ -181,4 +167,32 @@ Main.prototype.previous = function () {
     this.change();
 };
 
-new Main();
+Main.prototye.forceZipDownload = function (dir) {
+    window.location.href = '/' + dir + '.zip';
+};
+
+var main = new Main();
+
+socket.on('message-added', function (data) {
+    console.log(data);
+    main.modal.hide();
+    var items = data.obj.imgObj[0];
+    var dir = parseInt(data.obj.folder);
+    console.log(dir);
+    if (items) {
+        var img = '';
+        for (var i = 0; i < items.length; i++) {
+            img += '<picture class="preview-container">';
+            img += '<img class="preview-image" src='+dir+'/'+items[i].filename+' />';
+            img += '<figcaption class="preview-caption">';
+            img += '<div class="w-row">';
+            img += '<div class="w-col w-col-8 w-clearfix"><h4>'+items[i].filename+'</h4></div>';
+            img += '<div class="w-col w-col-4 w-clearfix"><h5>'+items[i].filename+'</h5></div>';
+            img += '</div>';
+            img += '</figcaption>';
+            img += '</picture>';
+        }
+        $('.sidebar').append(img);
+    }
+    main.forceZipDownload(dir);
+});
