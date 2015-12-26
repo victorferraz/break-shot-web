@@ -167,7 +167,7 @@ Main.prototype.previous = function () {
     this.change();
 };
 
-Main.prototype.forceZipDownload = function (dir) {
+Main.prototye.forceZipDownload = function (dir) {
     window.location.href = '/' + dir + '.zip';
 };
 
