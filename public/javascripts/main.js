@@ -128,6 +128,7 @@ Main.prototype.go = function (e) {
 };
 
 Main.prototype.sentData = function (obj) {
+    console.log(obj);
     socket.emit('add-message', obj);
 };
 
@@ -168,7 +169,7 @@ Main.prototype.previous = function () {
 };
 
 Main.prototype.forceZipDownload = function (dir) {
-    window.location.href = '/' + dir + '.zip';
+    //window.location.href = '/' + dir + '.zip';
 };
 
 var main = new Main();

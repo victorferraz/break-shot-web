@@ -42,6 +42,7 @@ app.use(function(req, res, next) {
 // error handlers
 app.use(function(err, req, res, next) {
   var errorStatus = {};
+  console.log(err);
   if (app.get('env') === 'development') {
     errorStatus = err;
   }
