@@ -78,7 +78,7 @@ Validate.prototype.isValid = function (fields) {
 
 Validate = new Validate();
 
-var socket = io.connect('http://localhost:4000');
+var socket = io.connect();
 
 var Main = function () {
     this.init();
