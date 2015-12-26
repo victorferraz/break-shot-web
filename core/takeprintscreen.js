@@ -12,6 +12,7 @@ var TakePrintScreen = function(){
 };
 
 TakePrintScreen.prototype.takePics = function (mediaArray, data, callback) {
+    console.log('start take');
     this.destiny = data.destiny;
     this.index = 0;
     this.data = data;
