@@ -9,11 +9,12 @@ var bodyParser = require('body-parser');
 var routes = require('./routes');
 var app = express();
 
-
+/*
 app.get('/javascripts/main.js', browserify('public/javascripts/main.js', {
   cache: true,
   precompile: true
 }));
+*/
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'tmp')));
