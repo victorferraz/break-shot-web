@@ -2,7 +2,7 @@
 
 var Validate = require('./validate');
 var $ = require('jquery');
-var socket = io.connect('http://localhost:4000');
+var socket = io.connect();
 
 var Main = function () {
     this.init();
@@ -167,7 +167,7 @@ Main.prototype.previous = function () {
     this.change();
 };
 
-Main.prototye.forceZipDownload = function (dir) {
+Main.prototype.forceZipDownload = function (dir) {
     window.location.href = '/' + dir + '.zip';
 };
 
