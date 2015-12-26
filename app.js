@@ -9,14 +9,16 @@ var bodyParser = require('body-parser');
 var routes = require('./routes');
 var app = express();
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'tmp')));
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+
 app.get('/javascripts/main.js', browserify('public/javascripts/main.js', {
   cache: true,
   precompile: true
 }));
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'tmp')));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
