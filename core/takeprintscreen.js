@@ -8,8 +8,7 @@ var zip = new JSZip();
 var fs = require('fs');
 var Q = require('q');
 
-var TakePrintScreen = function(){
-};
+var TakePrintScreen = function(){};
 
 TakePrintScreen.prototype.takePics = function (mediaArray, data, callback) {
     console.log('start take');
@@ -36,7 +35,6 @@ TakePrintScreen.prototype.onFinished = function(res) {
     return resObj;
 };
 
-
 TakePrintScreen.prototype.take = function (sizes) {
     var arrayWidth = this.getWidth(sizes);
     var path;
@@ -45,15 +43,16 @@ TakePrintScreen.prototype.take = function (sizes) {
     this.dir = this.createDir();
     path = this.data.url.replace('http://', '');
     var deferred = Q.defer();
+    console.log(path);
+    console.log(arrayWidth);
     var pgeres = new pageres({delay: 5})
         .src(path, arrayWidth, {'filename': this.data.fileName + '-<%= size %>', 'format': this.data.extension })
-        .dest(this.dir);
-    pgeres.run(function(err, streams){
-        if (err) {
-            throw err;
-        }else{
+        .dest(this.dir)
+        .run()
+        .then(function(streams){
+            console.log('pass');
+            console.log(streams);
             deferred.resolve(streams);
-        }
     });
     return deferred.promise;
 };
