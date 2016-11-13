@@ -35,6 +35,7 @@ Controller.prototype.go = function (data, callback) {
     }).then( function (res) {
         return Zip.zipFolder(res);
     }).then( function (res) {
+        console.log('finished');
         callback(res);
     });
 };

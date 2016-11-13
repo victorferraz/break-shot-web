@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-
-
 var app = require('../app');
 var debug = require('debug')('break-shot-web:server');
 var http = require('http');
@@ -21,7 +18,6 @@ var sockets = [];
 var messages = [];
 
 io.sockets.on('connection', function (socket) {
-    console.log(socket);
     socket.emit('messages-available', messages);
     socket.on('add-message', function (data) {
         controller.go(data, function(data){

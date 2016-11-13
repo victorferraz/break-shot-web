@@ -168,18 +168,12 @@ Main.prototype.previous = function () {
     this.change();
 };
 
-Main.prototype.forceZipDownload = function (dir) {
-    //window.location.href = '/' + dir + '.zip';
-};
-
 var main = new Main();
 
 socket.on('message-added', function (data) {
-    console.log(data);
     main.modal.hide();
     var items = data.obj.imgObj[0];
     var dir = parseInt(data.obj.folder);
-    console.log(dir);
     if (items) {
         var img = '';
         for (var i = 0; i < items.length; i++) {
@@ -195,5 +189,4 @@ socket.on('message-added', function (data) {
         }
         $('.sidebar').append(img);
     }
-    main.forceZipDownload(dir);
 });

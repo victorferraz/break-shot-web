@@ -1,12 +1,9 @@
 'use strict';
 
 var pageres = require('pageres');
-var async = require('async');
-var fs = require('fs');
-var JSZip = require('jszip');
-var zip = new JSZip();
 var fs = require('fs');
 var Q = require('q');
+var throat = require('throat');
 
 var TakePrintScreen = function(){};
 
@@ -24,7 +21,7 @@ TakePrintScreen.prototype.takePics = function (mediaArray, data, callback) {
     if (data.size === 'auto-sizing'){
         params = merged.concat.apply(merged, mediaArray);
     }
-    return Q.all(mediaArray.map(this.take.bind(this))).then(this.onFinished.bind(this));
+    return Q.all(mediaArray.map(  throat(this.take.bind(this), 1) )).then(this.onFinished.bind(this));
 };
 
 TakePrintScreen.prototype.onFinished = function(res) {
@@ -36,18 +33,23 @@ TakePrintScreen.prototype.onFinished = function(res) {
 };
 
 TakePrintScreen.prototype.take = function (sizes) {
+    console.log('---', sizes);
     var arrayWidth = this.getWidth(sizes);
+    var params = {};
     var path;
     this.index++;
     var self = this;
     this.dir = this.createDir();
-    path = this.data.url.replace('http://', '');
+    params.path = this.data.url.replace('http://', '');
     var deferred = Q.defer();
-    console.log(path);
-    console.log(arrayWidth);
+    params = {'dir': this.dir,  'filename': this.data.fileName + '-<%= size %>', 'format': this.data.extension };
+    this.print(params);
+};
+
+TakePrintScreen.prototype.print = function (obj) {
     var pgeres = new pageres({delay: 5})
-        .src(path, arrayWidth, {'filename': this.data.fileName + '-<%= size %>', 'format': this.data.extension })
-        .dest(this.dir)
+        .src(obj.path, obj.arrayWidth, {'filename': obj.data.fileName + '-<%= size %>', 'format': obj.data.extension })
+        .dest(obj.dir)
         .run()
         .then(function(streams){
             console.log('pass');
