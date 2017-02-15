@@ -6,6 +6,7 @@ var Q = require('q');
 var Zip = function () {};
 
 Zip.prototype.zipFolder = function (obj, callback) {
+    console.log('zip files', obj);
     var response = {};
     response.obj = obj;
     var zipName = obj.dir + '.zip';

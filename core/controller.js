@@ -1,42 +1,39 @@
 'use strict';
 
-var GetCss = require('./getcss');
-var MediaQuerieRotine = require('./mediaquerierotine');
 var TakePrintScreen = require('./takeprintscreen');
-var ReadHtml = require('./readhtml');
-var CustomSize = require('./customsize');
 var Q = require('q');
 var Zip = require('./zip');
 
 var Controller = function () {};
+const detectBreakPoint = require('detect-media-queries');
+const fs = require('fs');
 
 Controller.prototype.go = function (data, callback) {
-    console.log(data);
     var settings = data;
-    var readHtml = ReadHtml.getHtmlArray(data);
-    var deferred = Q.defer();
-    deferred.resolve(readHtml);
-    deferred.promise.then( function(readHtml) {
-        console.log('readHtml');
-        var urlMain = GetCss.run(readHtml, settings);
-        return urlMain;
-    }).then( function(urlMain) {
-        console.log('urlMain');
-        var media = '';
-        if (data.size === 'auto-sizing') {
-            media = MediaQuerieRotine.getBreakPoints(urlMain, settings);
-        } else {
-            media = CustomSize.getSizes(settings);
-        }
-        return media;
-    }).then( function(mediaQueries) {
-        console.log('mediaQueries');
-        return TakePrintScreen.takePics(mediaQueries, settings);
-    }).then( function (res) {
+    console.log(settings);
+    return new Promise((resolve, reject) =>{
+        fs.mkdtemp('./tmp/', (err, folder) => {
+            if (!err) {
+                resolve(folder);
+            } else {
+                reject(error);
+            }
+        });
+    }).then((folder) =>{
+        console.log('1', folder);
+        return new detectBreakPoint().getMedia('http://rccomunicacao.com.br/').then((media)=>{
+            console.log('2', media);
+            return {'media': media, 'folder': folder, 'settings': settings};
+        });
+    }).then(res=>{
+        console.log('aaa3', res);
+        return  TakePrintScreen.takePics(res, data);
+    }).then( function (res, x) {
+        console.log('4', res, x);
         return Zip.zipFolder(res);
     }).then( function (res) {
         callback(res);
-    });
+    }).catch(error=>console.log(error));
 };
 
 module.exports = new Controller();

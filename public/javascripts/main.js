@@ -6,7 +6,6 @@ var socket = io.connect();
 
 var Main = function () {
     this.init();
-
 };
 
 Main.prototype.init = function () {

@@ -9,6 +9,13 @@ var port = normalizePort(process.env.PORT || '4000');
 app.set('port', port);
 var server = http.createServer(app);
 var io = require('socket.io')(server);
+const model = require('../model');
+
+models.sequelize.sync().then(function () {
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+});
 
 server.listen(port, function () {
    console.log('running');
@@ -21,7 +28,6 @@ var sockets = [];
 var messages = [];
 
 io.sockets.on('connection', function (socket) {
-    console.log(socket);
     socket.emit('messages-available', messages);
     socket.on('add-message', function (data) {
         controller.go(data, function(data){
