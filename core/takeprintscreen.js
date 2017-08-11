@@ -8,29 +8,22 @@ const Q = require('q');
 var TakePrintScreen = function(){};
 
 TakePrintScreen.prototype.takePics = function (data, callback) {
-    this.destiny = data.folder;
-    this.data = data.settings;
-    this.medias = data.media;
-    this.dir = '';
-    this.currentFolder = '';
-
-    let path = this.data.url.replace('http://', '');
+    let path = data.settings.url.replace('http://', '');
+    data.savedFiles = __dirname + '/../' + data.folder;
     let deferred = Q.defer();
-    let dir = __dirname + '/../' + this.destiny;
-
-    async.each(this.medias, (item,z) =>{
-    console.log(item, callback);
-        const pageres = new Pageres({delay: 250})
-        .src(path, item)
-        .dest(dir)
-        .on('warning', err => console.log(err))
-        .run()
-        .then(() => callback());
-    }, (err) =>{
-        console.log(err);
+    async.every(data.media, function(item, cb) {
+        const pageres = new Pageres({delay: 10})
+            .src(path, [item], {crop: true})
+            .dest(data.savedFiles)
+            .on('warning', error => console.log(error))
+            .run()
+            .then(() => cb(null, true));
+    }, function(err, result) {
+        console.log('err', err);
+        console.log('finished', result);
+        deferred.resolve(data);
     });
-
-
+    return deferred.promise;
 };
 
 module.exports = new TakePrintScreen();

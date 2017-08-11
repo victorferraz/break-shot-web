@@ -1,26 +1,24 @@
-var fs = require('fs');
-var archiver = require('archiver');
-var archive = archiver('zip');
-var Q = require('q');
-
-var Zip = function () {};
+const fs = require('fs');
+const archiver = require('archiver');
+const archive = archiver('zip');
+const Q = require('q');
+const Zip = function () {};
 
 Zip.prototype.zipFolder = function (obj, callback) {
     console.log('zip files', obj);
-    var response = {};
+    const response = {};
     response.obj = obj;
-    var zipName = obj.dir + '.zip';
-    var output = fs.createWriteStream(zipName);
-    response.zipName = zipName;
+    response.zipName =  `${__dirname}/../tmp/${Date.now()}.zip`;
+    const  output = fs.createWriteStream(response.zipName);
     output.on('close', function() {});
     archive.on('error', function(err) {
       throw err;
     });
     console.log('start zip');
 
-    var deferred = Q.defer();
+    const deferred = Q.defer();
     archive
-      .directory(obj.dir)
+      .directory(obj.savedFiles)
       .finalize();
     deferred.resolve(response);
     return deferred.promise;

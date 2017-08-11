@@ -168,7 +168,7 @@ Main.prototype.previous = function () {
 };
 
 Main.prototype.forceZipDownload = function (dir) {
-    //window.location.href = '/' + dir + '.zip';
+    window.location.href = '/' + dir + '.zip';
 };
 
 var main = new Main();
@@ -179,20 +179,6 @@ socket.on('message-added', function (data) {
     var items = data.obj.imgObj[0];
     var dir = parseInt(data.obj.folder);
     console.log(dir);
-    if (items) {
-        var img = '';
-        for (var i = 0; i < items.length; i++) {
-            img += '<picture class="preview-container">';
-            img += '<img class="preview-image" src='+dir+'/'+items[i].filename+' />';
-            img += '<figcaption class="preview-caption">';
-            img += '<div class="w-row">';
-            img += '<div class="w-col w-col-8 w-clearfix"><h4>'+items[i].filename+'</h4></div>';
-            img += '<div class="w-col w-col-4 w-clearfix"><h5>'+items[i].filename+'</h5></div>';
-            img += '</div>';
-            img += '</figcaption>';
-            img += '</picture>';
-        }
-        $('.sidebar').append(img);
-    }
+    debugger;
     main.forceZipDownload(dir);
 });
